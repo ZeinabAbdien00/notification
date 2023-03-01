@@ -5,7 +5,6 @@ import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -14,15 +13,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.getSystemService
 import com.example.notification.Constants.channelID
 import com.example.notification.Constants.channelName
 import com.example.notification.Constants.descriptionNotification
 import com.example.notification.databinding.ActivityMainBinding
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import java.time.LocalDateTime
-import java.util.Calendar
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     //private lateinit var baseService: BaseService
 
     //@RequiresApi(Build.VERSION_CODES.M)
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,32 +45,47 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        val calendar = Calendar.getInstance()
+        calendar[Calendar.HOUR_OF_DAY] = 18
+        calendar[Calendar.MINUTE] = 30
+        calendar[Calendar.SECOND] = 0
+        val intent1 = Intent(this@MainActivity, Notification::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this@MainActivity,
+            0,
+            intent1,
+           0)
+        val am = this@MainActivity.getSystemService(ALARM_SERVICE) as AlarmManager
+        am.setRepeating(AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent)
+
+
         createNotificationChannel()
 
-//        binding = ActivityMainBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
 
-
-
-        val scheduler = AndroidAlarmScheduler(this)
-        var alarmItem: AlarmItem? = null
+  //      val scheduler = AndroidAlarmScheduler(this)
+//        var alarmItem: AlarmItem? = null
 
         binding.submitButton.setOnClickListener {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                alarmItem = AlarmItem(
-                    time = LocalDateTime.now().plusSeconds(5),
-                    message = "Hello World"
-                )
-                Log.d("suzan", LocalDateTime.now().toString())
 
-            }
 
-            alarmItem?.let(scheduler::schedule)
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                alarmItem = AlarmItem(
+//                    time = LocalDateTime.now().plusSeconds(5),
+//                    message = "Hello World"
+//                )
+//                Log.d("suzan", LocalDateTime.now().toString())
+//
+//            }
+
+           // alarmItem?.let(scheduler::schedule)
         }
 
         binding.hideButton.setOnClickListener {
-            alarmItem?.let(scheduler::cancel)
+          //  alarmItem?.let(scheduler::cancel)
         }
 
 
