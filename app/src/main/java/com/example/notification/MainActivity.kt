@@ -77,6 +77,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        //اللي هيعمل ريبيت set وهباصيلها 4 متغيرات
+
+
+
 
 
 
